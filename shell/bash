@@ -1,0 +1,9 @@
+ls
+ls -la
+ls -lrt
+ll
+ls -1R
+grep test -r *
+ls *
+ls -l|wc -l
+
