@@ -1,0 +1,11 @@
+#!/bin/bash
+
+PATH=$PATH:/backup/bin
+CONFIG_LIST=`backup_contents |grep conf|grep -v test`
+
+
+for config_file in $CONFIG_LIST
+do
+	echo backup_contents $config_file
+	backup_contents $config_file
+done

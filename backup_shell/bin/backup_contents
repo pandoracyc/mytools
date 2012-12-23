@@ -1,0 +1,208 @@
+#!/bin/bash
+
+BKBIN_DIR=`dirname $0`
+USER=`whoami`
+
+if [ $USER != "root" ]; then
+	echo execute root user.
+	exit
+fi
+
+if [ $# = 0 ]; then 
+	echo "[[backup list]]"
+	ls -1 $BKBIN_DIR/*.conf
+	cat <<EOF > $BKBIN_DIR/template.conf
+#DATE=YYYYMMDDHHMM(default)
+#TITLE=""
+#CONFIG_RC="OK"
+
+##rsync setting
+#MODE="RSYNC"
+#OPTION="--delete --dry-run"
+#OPTION=""
+###www配下のファイルがTRG_DIRに直接作成される TRG_DIR/... 
+#SRC_DIR="/data/www/"
+###if you want to make TRG_DIR/www/...
+#SRC_DIR="/data/www"
+#TRG_DIR="/backup/www/"
+
+##tar setting
+#MODE="TAR"
+## max history count.number is from 1 to max
+#SAVE_COUNT=5
+##mHISTORY="N\${NUMBER}N" #0 or greater than save_count is not delete.
+#BASE_DIR="/data/"
+#BK_DIR="www"
+#TRG_DIR="/backup/www/"
+#TRG_FILE="www_\${DATE}_mHISTORY.tar.gz"
+
+##DUMP setting
+#MODE="DUMP"
+#SRC_DEV="/data/www"
+#TRG_DEV="/backup/system/"
+#TRG_DIR="\$TRG_DEV" #dont change
+#TRG_FILE="\`uname -n\`_\$DATE.dump"
+
+##mount check
+#MNT_DIR=""
+#if [ -d "\$MNT_DIR/lost+found" ]; then
+#	CONFIG_RC="OK"
+#else
+#	CONFIG_RC="MOUNT_ERROR"
+#fi
+
+EOF
+	sudo chmod 666 $BKBIN_DIR/template.conf
+	exit
+fi
+
+#### 変数設定
+SETTING_FILE="${1}"
+DATE=`date +%Y%m%d%H%M`
+LOGDIR="$BKBIN_DIR/../log"
+LOGFILE="$LOGDIR/`basename $SETTING_FILE|sed s/.conf//g`$DATE.log"
+CONFIG_RC="OK"
+
+#tar mode. 不要ファイル削除用
+DAY=`date +%d`
+SAVE_COUNT=5 #history 0...count,1,1,...
+NUMBER=`expr $DAY / 7 + 1` #作成
+RM_NUMBER=`expr $NUMBER + 1`  #削除
+mHISTORY="N${NUMBER}N"
+
+
+
+##### 設定読み込み
+if [ -f "${SETTING_FILE}" ]; then
+	echo "SETTING_FILE: ${SETTING_FILE}"
+	. $SETTING_FILE
+	if [ "$CONFIG_RC" != "OK" ]; then 
+		echo "${SETTING_FILE} FAIL($CONFIG_RC)"
+		exit
+	fi
+else
+	echo "${SETTING_FILE} is not exist."
+	exit
+fi
+
+
+if [ -z $MODE ]; then
+	echo "Please Set MODE. (TAR,RSYNC,DUMP)"
+	exit
+else
+	echo "MODE   : $MODE"
+fi
+
+if [ -d $LOGDIR ]; then
+	true;
+else
+	echo makedir $LOGDIR
+	mkdir -p $LOGDIR
+fi
+
+touch $LOGFILE
+if [ -w $LOGFILE ]; then 
+	echo LOGFILE: $LOGFILE
+else
+	echo cant make $LOGFILE
+	exit
+fi
+
+if [ -d $TRG_DIR ]; then
+	echo TRG_DIR: ${TRG_DIR}	
+else
+	echo $TRG_DIR is not exist.
+	exit
+fi
+
+
+
+###### バックアップ処理
+
+case $MODE in
+"RSYNC")
+	#### directory check
+	if [ -d $SRC_DIR ]; then
+		echo SRC_DIR: $SRC_DIR	
+	else
+		echo $SRC_DIR is not exist.
+		exit
+	fi
+
+
+ 	sudo rsync -av $OPTION $SRC_DIR ${TRG_DIR} |tee -a $LOGFILE
+;;
+
+
+
+
+
+"TAR")
+	#### 古いファイル削除
+	if [ -n "$mHISTORY" ]; then
+		if [ $NUMBER -gt $SAVE_COUNT ]; then
+			echo "NUMBER($NUMBER) is out of range.MAX($SAVE_COUNT)."
+			NUMBER=0
+		fi
+		if [ $RM_NUMBER -gt $SAVE_COUNT ]; then
+			RM_NUMBER=1
+			mHISTORY="N${NUMBER}N"
+		fi
+
+		RMLIST=`ls $TRG_DIR|grep N${RM_NUMBER}N`
+		for list in $RMLIST
+		do
+			echo rm -rf $TRG_DIR/$list
+			rm -rf $TRG_DIR/$list
+		done
+	fi
+
+	#### check
+	if [ -n ${TRG_FILE} ]; then
+		TRG_FILE=`echo $TRG_FILE|sed s/mHISTORY/$mHISTORY/g`
+		echo "TRG_FILE: $TRG_FILE"
+	else
+		echo Please set TRG_FILE.
+		exit
+	fi
+	
+	if [ -z ${BK_DIR} ]; then
+		echo Please set BK_DIR.
+		exit
+	fi
+
+	if [ -d "${BASE_DIR}/${BK_DIR}" ]; then
+		echo "BACKUP: ${BASE_DIR}/${BK_DIR}"
+	else
+		echo ${BASE_DIR}/${BK_DIR} is not exist.
+		exit
+	fi
+
+
+echo 	tar cvz -C ${BASE_DIR} -f ${TRG_DIR}/${TRG_FILE} ${BK_DIR} >>$LOGFILE
+#FIXME BK_DIR-> BK_DIR_LIST
+ 	tar cvz -C ${BASE_DIR} -f ${TRG_DIR}/${TRG_FILE} ${BK_DIR} > $LOGFILE
+;;
+
+
+
+
+"DUMP")
+	if [ -b "$SRC_DEV" ]; then
+		echo SRC_DEV: ${SRC_DEV}	
+	else
+		echo $SRC_DEV is not exist.
+		exit
+	fi
+
+	echo "dump -0f - $SRC_DEV 2>>$LOGFILE | gzip >${TRG_DIR}/${TRG_FILE} "|tr -s "/"|tee -a $LOGFILE
+	dump -0f - $SRC_DEV 2>>$LOGFILE | gzip >${TRG_DIR}/${TRG_FILE}
+;;
+
+
+
+
+*)
+	echo MODE is not Match.
+;;
+esac

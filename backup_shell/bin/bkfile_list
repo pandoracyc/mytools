@@ -1,0 +1,28 @@
+#!/bin/bash
+
+BKBIN_DIR=`dirname $0`
+CONF_LIST=`ls $BKBIN_DIR/*.conf`
+
+
+for conf_file in $CONF_LIST
+do
+	MODE=""
+	TRG_DIR=""
+	TITLE=""
+	CONFIG_RC="OK"
+	. $conf_file
+	if [ -n "$TRG_DIR" ]; then
+		echo TITLE :$TITLE
+		echo ---------- 設定 ----------------
+		echo MODE : $MODE
+		echo CONF_FILE: $conf_file
+		echo TRG_DIR : $TRG_DIR
+		echo CONFIG_RC: $CONFIG_RC
+
+		echo --- バックアップファイル一覧 ---
+		ls -lrth1 $TRG_DIR
+		echo --------------------------------
+		echo 
+		echo 
+	fi
+done
