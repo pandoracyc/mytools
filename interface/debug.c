@@ -30,7 +30,8 @@ return;
 int main(int argc, char *argv[]) {
 	strcpy(debug_filename, "test.log");
 	//debug_start(DEBUG_FILE, debug_filename);
-	debug_start(DEBUG_TCP, debug_filename);
+	//debug_start(DEBUG_TCP, debug_filename);
+	debug_start(DEBUG_STDOUT, debug_filename);
 	debug_printf(TRACE, MAIN, "debug_filename : %s\n", debug_filename);
 	debug_printf(TRACE, MAIN, "debug_kind : %d\n", debug_kind);
 	debug_printf(TRACE, MAIN,  "debug_level : %d\n",debug_level);
@@ -46,17 +47,14 @@ int debug_start(enum DEBUG_KIND kind, const char * output)
 	debug_kind = kind;
 	switch (debug_kind) {
 	case DEBUG_TCP:
-		fprintf(stdout, "DEBUG_TCP\n");
 		tcp_start();
 		break;
 	case DEBUG_FILE:
-		fprintf(stdout, "DEBUG_FILE\n");
 		printf("DEBUG_FILE\n",kind);
 		debug_fp = fopen(output, "w");
 		fprintf(debug_fp, DEBUG_SART_LOG);
 		break;
 	default:
-		fprintf(stdout, "STDOUT\n");
 		fprintf(stdout, DEBUG_SART_LOG);
 		break;
 	}
@@ -97,7 +95,6 @@ void debug_printf(int level, int kind, char *fmt, ...)
 		default:
 			if( test_debug[kind].out)
 				fprintf(stdout, "[T%s] ", buf);
-			fprintf(stdout, "[T%s] ", buf);
 			fprintf(stdout, "[@%s] ", test_debug[kind].name);
 			vfprintf(stdout, fmt, argp);
 			break;

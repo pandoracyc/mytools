@@ -33,6 +33,7 @@ DEBUG_SYSTEM test_debug[] = {
 
 
 enum DEBUG_KIND {
+	DEBUG_STDOUT,
 	DEBUG_FILE,
 	DEBUG_DB,
 	DEBUG_SYSLOG,
