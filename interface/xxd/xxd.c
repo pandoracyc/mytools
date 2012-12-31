@@ -395,7 +395,7 @@ int nz;
   static int zero_seen = 0;
 
 LOG_TRACE_START
-debug_printf(TRACE,SYSTEM,"nz:%d, zero_seen:%d\n",nz,zero_seen );
+debug_printf(TRACE,SYSTEM,"l:%s, nz:%d\n", l, nz);
   if (!nz && zero_seen == 1)
     strcpy(z, l);
 
@@ -715,9 +715,9 @@ LOG_TRACE_END
 	  fprintf(fpo, "_len = %d;\n", p);
 	}
 
+LOG_TRACE_END
       fclose(fp);
       fclose(fpo);
-LOG_TRACE_END
       return 0;
     }
 
@@ -737,9 +737,9 @@ LOG_TRACE_END
 	}
       if (p < cols)
 	putchar('\n');
+LOG_TRACE_END
       fclose(fp);
       fclose(fpo);
-LOG_TRACE_END
       return 0;
     }
 
@@ -752,6 +752,7 @@ LOG_TRACE_END
 
   while ((length < 0 || n < length) && (e = getc(fp)) != EOF)
     {
+debug_printf(TRACE,SYSTEM,"e:0x%x(%c), n:0x%x\n", e, e, n);
       if (p == 0)
 	{
 	  sprintf(l, "%07lx: ", n + seekoff);
@@ -791,6 +792,7 @@ LOG_TRACE_END
 	  p = 0;
 	}
     }
+debug_printf(TRACE,SYSTEM,"while finish e:0x%x(%c), n:0x%x\n", e, e, n);
   if (p)
     {
       l[c = (11 + (grplen * cols - 1)/octspergrp + p)] = '\n'; l[++c] = '\0';
