@@ -1,7 +1,14 @@
-logout.exe: debug.o
-	gcc -o logout.exe debug.o
+all: server logout
+server: server.c
+	gcc server.c -o server
+logout: debug.o debug_tcp.o
+	rm -f test.log
+	touch test.log
+	gcc -o logout.exe debug.o debug_tcp.o
 	./logout.exe
-	cat test.log
 
 debug.o: debug.c debug.h
 	gcc -c debug.c -DDEBUG_MAIN_TEST
+
+debug_tcp.o: debug_tcp.c debug_tcp.h
+	gcc -c debug_tcp.c

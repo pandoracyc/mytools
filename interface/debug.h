@@ -1,3 +1,5 @@
+#include "error_message.h"
+
 #define DEFAULT_DEBUG_PRINT_TIME 1
 #define OUTPUT_TIME_FORMAT "%Y/%m/%d_%H:%M:%S"
 #define DEFAULT_DEBUG_LEVEL 5
@@ -23,7 +25,7 @@ enum DEBUG_TYPE {
 
 #define ADD_SYSTEM(out,name)	out, #name ,
 DEBUG_SYSTEM test_debug[] = {
-	ADD_SYSTEM(0, MAIN)
+	ADD_SYSTEM(1, MAIN)
 	ADD_SYSTEM(0, DRIVER)
 	ADD_SYSTEM(0, SYSTEM)
 	ADD_SYSTEM(1, FUNCTION)
