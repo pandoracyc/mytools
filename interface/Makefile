@@ -10,7 +10,7 @@ logout: debug.o debug_tcp.o
 	./logout.exe
 
 debug.o: debug.c debug.h
-	gcc -c debug.c -DDEBUG_MAIN_TEST
+	gcc -c debug.c 
 
 debug_tcp.o: debug_tcp.c debug_tcp.h
 	gcc -c debug_tcp.c

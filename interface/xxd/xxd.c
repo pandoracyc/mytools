@@ -94,6 +94,7 @@
 #if __MWERKS__ && !defined(BEBOX)
 # include <unix.h>	/* for fdopen() on MAC */
 #endif
+#include "../debug.h"
 
 #if defined(__BORLANDC__) && __BORLANDC__ <= 0x0410 && !defined(fileno)
 /* Missing define and prototype grabbed from the BC 4.0 <stdio.h> */
@@ -227,6 +228,7 @@ static void
 exit_with_usage(pname)
 char *pname;
 {
+LOG_TRACE_START
   fprintf(stderr, "Usage:\n       %s [options] [infile [outfile]]\n", pname);
   fprintf(stderr, "    or\n       %s -r [-s [-]offset] [-c cols] [-ps] [infile [outfile]]\n", pname);
   fprintf(stderr, "Options:\n");
@@ -249,6 +251,7 @@ char *pname;
 #endif
   fprintf(stderr, "    -u          use upper case hex letters.\n");
   fprintf(stderr, "    -v          show version: \"%s%s\".\n", version, osver);
+LOG_TRACE_END
   exit(1);
 }
 
@@ -268,6 +271,7 @@ long base_off;
 {
   int c, ign_garb = 1, n1 = -1, n2 = 0, n3, p = cols;
   long have_off = 0, want_off = 0;
+LOG_TRACE_START
 
   rewind(fpi);
 
@@ -327,6 +331,7 @@ long base_off;
 	  if (base_off + want_off < have_off)
 	    {
 	      fprintf(fperr, "%s: sorry, cannot seek backwards.\n", pname);
+LOG_TRACE_END
 	      return 5;
 	    }
 	  for (; have_off < base_off + want_off; have_off++)
@@ -364,6 +369,7 @@ long base_off;
 #endif
   fclose(fpo);
   fclose(fpi);
+LOG_TRACE_END
   return 0;
 }
 
@@ -388,6 +394,8 @@ int nz;
   static char z[LLEN+1];
   static int zero_seen = 0;
 
+LOG_TRACE_START
+debug_printf(TRACE,SYSTEM,"nz:%d, zero_seen:%d\n",nz,zero_seen );
   if (!nz && zero_seen == 1)
     strcpy(z, l);
 
@@ -407,6 +415,7 @@ int nz;
       if (nz)
 	zero_seen = 0;
     }
+LOG_TRACE_END
 }
 
 /* This is an EBCDIC to ASCII conversion table */
@@ -454,9 +463,11 @@ char *argv[];
   char l[LLEN+1];
   char *pname, *pp;
 
+LOG_TRACE_START
 #ifdef AMIGA
   /* This program doesn't work when started from the Workbench */
   if (argc == 0)
+LOG_TRACE_END
     exit(1);
 #endif
 
@@ -486,6 +497,7 @@ char *argv[];
       else if (!STRNCMP(pp, "-v", 2))
 	{
 	  fprintf(stderr, "%s%s\n", version, osver);
+LOG_TRACE_END
 	  exit(0);
 	}
       else if (!STRNCMP(pp, "-c", 2))
@@ -595,6 +607,7 @@ char *argv[];
 							    && (cols > COLS)))
     {
       fprintf(stderr, "%s: invalid number of columns (max. %d).\n", pname, COLS);
+LOG_TRACE_END
       exit(1);
     }
 
@@ -612,6 +625,7 @@ char *argv[];
 	{
 	  fprintf(stderr,"%s: ", pname);
 	  perror(argv[1]);
+LOG_TRACE_END
 	  return 2;
 	}
     }
@@ -628,6 +642,7 @@ char *argv[];
 	{
 	  fprintf(stderr, "%s: ", pname);
 	  perror(argv[2]);
+LOG_TRACE_END
 	  return 3;
 	}
       rewind(fpo);
@@ -638,8 +653,10 @@ char *argv[];
       if (hextype && (hextype != HEX_POSTSCRIPT))
 	{
 	  fprintf(stderr, "%s: sorry, cannot revert this type of hexdump\n", pname);
+LOG_TRACE_END
 	  return -1;
 	}
+LOG_TRACE_END
       return huntype(fp, fpo, stderr, pname, cols, hextype,
 		negseek ? -seekoff : seekoff);
     }
@@ -654,6 +671,7 @@ char *argv[];
       if (e < 0 && negseek)
 	{
 	  fprintf(stderr, "%s: sorry cannot seek.\n", pname);
+LOG_TRACE_END
 	  return 4;
 	}
       if (e >= 0)
@@ -699,6 +717,7 @@ char *argv[];
 
       fclose(fp);
       fclose(fpo);
+LOG_TRACE_END
       return 0;
     }
 
@@ -720,6 +739,7 @@ char *argv[];
 	putchar('\n');
       fclose(fp);
       fclose(fpo);
+LOG_TRACE_END
       return 0;
     }
 
@@ -779,6 +799,7 @@ char *argv[];
   else if (autoskip)
     xxdline(fpo, l, -1);	/* last chance to flush out suppressed lines */
 
+LOG_TRACE_END
   fclose(fp);
   fclose(fpo);
   return 0;

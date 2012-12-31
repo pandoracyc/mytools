@@ -10,6 +10,16 @@ static enum DEBUG_KIND debug_kind;
 static int debug_time = DEFAULT_DEBUG_PRINT_TIME;
 static char debug_filename[256];
 
+int log_tree_level = 0;
+
+//FIX
+#define ADD_SYSTEM(out,name)	out, #name ,
+DEBUG_SYSTEM log_test_debug[] = {
+	ADD_SYSTEM(1, MAIN)
+	ADD_SYSTEM(1, DRIVER)
+	ADD_SYSTEM(1, SYSTEM)
+	ADD_SYSTEM(1, FUNCTION)
+};
 
 #ifdef DEBUG_MAIN_TEST
 void func002(void){
@@ -68,7 +78,7 @@ void debug_printf(int level, int kind, char *fmt, ...)
 	char buf[255];
 	char sendbuf[255];
 
-	if(level<=debug_level && test_debug[kind].out) {
+	if(level<=debug_level && log_test_debug[kind].out) {
 		if (debug_time == 1) {
 			time(&timer);
 			tm = localtime(&timer);
@@ -78,7 +88,7 @@ void debug_printf(int level, int kind, char *fmt, ...)
 		switch (debug_kind) {
 		case DEBUG_TCP:
 			memset(sendbuf,0x00,sizeof(sendbuf));
-			if( test_debug[kind].out) {
+			if( log_test_debug[kind].out) {
 				sprintf(sendbuf, "[T%s] ", buf);
 				tcp_printf(sendbuf, strlen(sendbuf)+1);
 			}
@@ -87,16 +97,17 @@ void debug_printf(int level, int kind, char *fmt, ...)
 			tcp_printf(sendbuf, strlen(sendbuf)+1);
 			break;
 		case DEBUG_FILE:
-			if( test_debug[kind].out)
+			if( log_test_debug[kind].out)
 				fprintf(debug_fp, "[T%s] ", buf);
-			fprintf(debug_fp, "[@%s] ", test_debug[kind].name);
+			fprintf(debug_fp, "[@%s] ", log_test_debug[kind].name);
 			vfprintf(debug_fp, fmt, argp);
 			break;
 		default:
-			if( test_debug[kind].out)
+			if( log_test_debug[kind].out)
 				fprintf(stdout, "[T%s] ", buf);
-			fprintf(stdout, "[@%s] ", test_debug[kind].name);
+			fprintf(stdout, "[@%s] ", log_test_debug[kind].name);
 			vfprintf(stdout, fmt, argp);
+			fflush(stdout);
 			break;
 		}
 		va_end(argp);
