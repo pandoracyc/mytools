@@ -1,9 +1,5 @@
-
-//__LINE__
-//__FILE__
-//__FUNCTION__
 //__VA_ARGS__
-#define DEBUG 0
+#define DEFAULT_DEBUG_LEVEL 0
 #define TRACE 0
 
 typedef struct {
@@ -15,12 +11,15 @@ enum DEBUG_TYPE {
 	MAIN,
 	DRIVER,
 	SYSTEM,
+	FUNCTION,
 };
 
+#define ADD_SYSTEM(name)	name, #name ,
 DEBUG_SYSTEM test_debug[] = {
-	MAIN, "MAIN",
-	DRIVER, "DRIVER",
-	SYSTEM, "SYSTEM",
+	ADD_SYSTEM(MAIN)
+	ADD_SYSTEM(DRIVER)
+	ADD_SYSTEM(SYSTEM)
+	ADD_SYSTEM(FUNCTION)
 };
 
 
@@ -33,6 +32,11 @@ enum DEBUG_KIND {
 
 #define DEBUG_SART_LOG	"-------------- DEBUG START -------------\n"
 #define DEBUG_END_LOG	"-------------- DEBUG_END   -------------\n"
+
+#define LOG_TRACE_START	debug_printf(TRACE, FUNCTION, "%s:%d %s() START \n", __FILE__, __LINE__, __FUNCTION__);
+
+
+
 
 /**
  * ログ出力を開始する

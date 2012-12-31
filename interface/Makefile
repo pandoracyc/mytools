@@ -4,4 +4,4 @@ logout.exe: debug.o
 	cat test.log
 
 debug.o: debug.c debug.h
-	gcc -c debug.c
+	gcc -c debug.c -DDEBUG_MAIN_TEST

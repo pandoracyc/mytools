@@ -3,8 +3,14 @@
 #include "debug.h"
 
 static FILE *debug_fp;
-static int debug_level=0;
+static int debug_level = DEFAULT_DEBUG_LEVEL;
 static char debug_filename[256];
+
+#ifdef DEBUG_MAIN_TEST
+void func001(void){
+LOG_TRACE_START
+return;
+}
 
 int main(int argc, char *argv[]) {
 	strcpy(debug_filename, "test.log");
@@ -12,9 +18,11 @@ int main(int argc, char *argv[]) {
 	debug_printf(TRACE, MAIN, "debug_filename : %s\n", debug_filename);
 	debug_printf(TRACE, MAIN,  "debug_level : %d\n",debug_level);
 	debug_printf(TRACE, MAIN,  "debug_fp : 0x%x\n",debug_fp);
+	debug_printf(TRACE, DRIVER, "test\n");
+	func001();
 	debug_end();
 }
-
+#endif
 
 int debug_start(enum DEBUG_KIND kind, const char * output)
 {
