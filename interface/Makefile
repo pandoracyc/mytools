@@ -1,4 +1,6 @@
 all: server logout
+clean:
+	rm -f test.log *.o *.exe
 server: server.c
 	gcc server.c -o server
 logout: debug.o debug_tcp.o
