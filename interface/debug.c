@@ -8,9 +8,18 @@ static int debug_level = DEFAULT_DEBUG_LEVEL;
 static int debug_time = DEFAULT_DEBUG_PRINT_TIME;
 static char debug_filename[256];
 
+
 #ifdef DEBUG_MAIN_TEST
+void func002(void){
+LOG_TRACE_START
+	debug_printf(TRACE, DRIVER, "test\n");
+LOG_TRACE_END
+return;
+}
 void func001(void){
 LOG_TRACE_START
+	func002();
+	func002();
 	debug_printf(TRACE, DRIVER, "test\n");
 LOG_TRACE_END
 return;
@@ -45,9 +54,9 @@ void debug_printf(int level, int kind, char *fmt, ...)
 			time(&timer);
 			tm = localtime(&timer);
 			strftime(buf, sizeof(buf), OUTPUT_TIME_FORMAT, tm);
-			fprintf(debug_fp, "[%s] ", buf);
+			fprintf(debug_fp, "[T%s] ", buf);
 		}
-		fprintf(debug_fp, "[%s] ", test_debug[kind].name);
+		fprintf(debug_fp, "[@%s] ", test_debug[kind].name);
 		va_start( argp, fmt );
 		vfprintf(debug_fp, fmt, argp);
 	}

@@ -23,9 +23,9 @@ enum DEBUG_TYPE {
 
 #define ADD_SYSTEM(out,name)	out, #name ,
 DEBUG_SYSTEM test_debug[] = {
-	ADD_SYSTEM(1, MAIN)
-	ADD_SYSTEM(1, DRIVER)
-	ADD_SYSTEM(1, SYSTEM)
+	ADD_SYSTEM(0, MAIN)
+	ADD_SYSTEM(0, DRIVER)
+	ADD_SYSTEM(0, SYSTEM)
 	ADD_SYSTEM(1, FUNCTION)
 };
 
@@ -42,11 +42,20 @@ enum DEBUG_KIND {
 #define DEBUG_SART_LOG	"------------------------------------------ DEBUG START -----------------------------------------\n"
 #define DEBUG_END_LOG	"------------------------------------------ DEBUG_END   -----------------------------------------\n"
 
-#define LOG_TRACE_START	debug_printf(TRACE, FUNCTION, "%s:%d %s() START \n", __FILE__, __LINE__, __FUNCTION__);
-#define LOG_TRACE_END	debug_printf(TRACE, FUNCTION, "%s:%d %s() END \n", __FILE__, __LINE__, __FUNCTION__);
+int tree_level = 0;
+/* 関数のトレース開始ログを出力 */
+#define LOG_TRACE_START	\
+{ \
+tree_level++; \
+debug_printf(TRACE, FUNCTION, "%s:%d:%s() START(%d) \n", __FILE__, __LINE__, __FUNCTION__, tree_level); \
+}
 
-
-
+/* 関数のトレース終了ログを出力 */
+#define LOG_TRACE_END	\
+{ \
+debug_printf(TRACE, FUNCTION, "%s:%d:%s() END(%d) \n", __FILE__, __LINE__, __FUNCTION__, tree_level); \
+tree_level--; \
+} 
 
 /**
  * ログ出力を開始する
