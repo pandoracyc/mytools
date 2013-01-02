@@ -1,7 +1,7 @@
 #!/bin/bash
 
 PATH=$PATH:/backup/bin
-CONFIG_LIST=`backup_contents |grep conf|grep -v test`
+CONFIG_LIST=`backup_contents |grep conf|grep -v dump`
 
 
 for config_file in $CONFIG_LIST
