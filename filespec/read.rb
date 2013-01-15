@@ -3,9 +3,9 @@
 require "csv"
 require "read_config"
 
-# TODO READ FROM ENVIRONMENT
-prefix = "sample"
-extension = "dat"
+# ./read.rb [PREFIX] [EXTENSION]
+prefix = ARGV[0]
+extension = ARGV[1]
 
 
 #FILE INFOMATION

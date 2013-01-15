@@ -25,7 +25,7 @@ echo
 echo "--------------------------------------------------------------------------------"
 echo run read.rb ${PREFIX}_${EXTENSION}.conf
 cat ${PREFIX}_${EXTENSION}.conf
-./read.rb ${PREFIX}_${EXTENSION}.conf >LOG_FILE
+./read.rb ${PREFIX} ${EXTENSION} >LOG_FILE
 echo result is $?
 echo "--------------------------------------------------------------------------------"
 echo
