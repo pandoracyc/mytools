@@ -76,12 +76,12 @@ out_body = CSV.open(body_filename,"wb")
 
 # write head
 out_head << head_keys
-out_head << head_pack.parse_csv
+#out_head << head_pack.parse_csv
 out_head << head_values = head_hash.values_at(*head_keys)
 
 # write record
 out_body << body_keys
-out_body << body_pack.parse_csv
+#out_body << body_pack.parse_csv
 i = 0
 while i < body_hash.length
 	body_values = body_hash[i].values_at(*body_keys)
