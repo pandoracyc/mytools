@@ -2,9 +2,9 @@
 
 require "csv"
 
-#FILE INFOMATION
 extension = "dat"
 file_prefix="sample"
+#FILE INFOMATION
 p configure_file=sprintf("%s_%s.conf",file_prefix ,extension)
 
 # open file
@@ -14,21 +14,39 @@ config_fp = CSV.open(configure_file,"rb")
 print "----------------------------------------\n"
 p sprintf("%s.%s" ,file_prefix ,extension )
 print "----------------------------------------\n"
-config_hash = Array.new
+unit = Array.new
+keys = Array.new
+pack_template = Array.new
+i = 0
 while section = config_fp.readline
-	unit = section.join
-	file_keys = config_fp.readline
-	print "unit : "
-	p unit
+	unit[i] = section.join
+	pack_template[i] = config_fp.readline
+	keys[i] = config_fp.readline
+#	alist = pack_template[i].zip(keys[i])
+#	p Hash[alist]
 
-	print "file_keys : "
-	p file_keys.join
-	print "config_keys="
-	p config_keys = config_fp.readline
+	# print section
+	print "unit : "
+	p unit[i]
+	print "keys : "
+	p keys[i].join
+	print "pack_template : "
+	p pack_template[i]
 	print "\n"
+
+	i += 1
 end
+
+alist = unit.zip(keys)
+file_keys = Hash[alist]
+#p file_keys["head"]
+#p file_keys["body"]
+
+alist = unit.zip(pack_template)
+file_pack_template = Hash[alist]
+#p file_pack_template["head"]
+#p file_pack_template["body"]
 
 # close file
 config_fp.close
-
 
