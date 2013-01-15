@@ -11,7 +11,7 @@ extension = "dat"
 #FILE INFOMATION
 read_config_file(prefix, extension)
 filename = sprintf("%s.%s", prefix, extension)
-csvfile = sprintf("%s.csv", prefix)
+csvfile = "%s_%s.csv"
 
 unit = "head"
 head_length = $file_length[unit]
@@ -69,8 +69,8 @@ print "\n"
 print "----------------------------------------\n"
 print "make csvfile\n"
 print "----------------------------------------\n"
-p head_filename = sprintf(csvfile,"head")
-p body_filename = sprintf(csvfile,"body")
+p head_filename = sprintf(csvfile, prefix, "head")
+p body_filename = sprintf(csvfile, prefix, "body")
 out_head = CSV.open(head_filename,"wb")
 out_body = CSV.open(body_filename,"wb")
 
