@@ -7,16 +7,16 @@
 #=========================================================================
 #. template.conf
 #. common_func.sh
+PREFIX=sample
+EXTENSION=dat
 
 #=========================================================================
 # MAIN
 #=========================================================================
-OUTPUT_HTML=test.html
-PREFIX=sample
-EXTENSION=dat
-HEAD_CSV=sample_head.csv
-BODY_CSV=sample_body.csv
-LOG_FILE=log
+LOG_FILE=${PREFIX}_${EXTENSION}.log
+HEAD_CSV=${PREFIX}_head.csv
+BODY_CSV=${PREFIX}_body.csv
+OUTPUT_HTML=${PREFIX}_${EXTENSION}.html
 
 echo read file : sample.dat
 xxd sample.dat
@@ -25,7 +25,7 @@ echo
 echo "--------------------------------------------------------------------------------"
 echo run read.rb ${PREFIX}_${EXTENSION}.conf
 cat ${PREFIX}_${EXTENSION}.conf
-./read.rb ${PREFIX} ${EXTENSION} >LOG_FILE
+./read.rb ${PREFIX} ${EXTENSION} >$LOG_FILE
 echo result is $?
 echo "--------------------------------------------------------------------------------"
 echo
@@ -79,7 +79,7 @@ EOF
 
 
 #echo run write.rb
-#./write.rb >>sample.log
+#./write.rb >>#LOG_FILE
 #echo result is $?
 #echo
 #
