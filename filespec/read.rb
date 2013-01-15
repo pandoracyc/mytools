@@ -1,8 +1,10 @@
 #!/usr/bin/ruby
 
+require "csv"
+
 #FILE INFOMATION
 filename = "test.dat"
-outfile = "test2.dat"
+outfile = "test_%s.csv"
 
 head_length = 5
 head_keys=["len","to","record_size"]
@@ -46,25 +48,29 @@ fp.close
 
 
 
-
 # open file
-fp = open(outfile,"w")
+head_filename = sprintf(outfile,"head")
+body_filename = sprintf(outfile,"body")
+out_head = CSV.open(head_filename,"wb")
+out_body = CSV.open(body_filename,"wb")
 
 # write head
 print "write head\n"
-p head_hash = {"len"=>10, "to"=>"01", "record_size"=>0}
-head_values = head_hash.values_at(*head_keys)
-fp.write head_values.pack(head_pack)
+head_hash = {"len"=>10, "to"=>"01", "record_size"=>0}
+out_head << head_keys
+out_head << head_values = head_hash.values_at(*head_keys)
 
 # write record
 print "write body\n"
+out_body << body_keys
 i = 0
 while i < body_hash.length
 	p body_hash[i] = {"number"=>i+1, "x"=>"01", "y"=>"01"}
 	body_values = body_hash[i].values_at(*body_keys)
-	fp.write body_values.pack(body_pack)
+	out_body << body_values
 	i += 1
 end
 
 # close file
-fp.close
+out_head.close
+out_body.close
