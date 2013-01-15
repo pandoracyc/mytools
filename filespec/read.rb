@@ -1,18 +1,22 @@
-#!/usr/bin/ruby
+#!/usr/bin/ruby -I.
 
 require "csv"
+require "read_config"
 
 #FILE INFOMATION
-filename = "test.dat"
-csvfile = "test_%s.csv"
+read_config_file("sample","dat")
+filename = "sample.dat"
+csvfile = "sample_%s.csv"
 
+unit = "head"
 head_length = 5
-head_keys=["len","to","record_size"]
-head_pack = "H4H2H4"
+head_keys=$file_keys[unit]
+head_pack = $file_pack_template[unit].join
 
+unit = "body"
 body_record_size = 4
-body_keys=["number","x","y"]
-body_pack = "H4H2H2"
+body_keys=$file_keys[unit]
+body_pack = $file_pack_template[unit].join
 
 
 # open file

@@ -26,9 +26,9 @@ cat test_head.csv
 echo "---------------------------------------------------"
 echo 
 
-echo test_head.csv
+echo test_body.csv
 echo "---------------------------------------------------"
-cat test_head.csv
+cat test_body.csv
 echo "---------------------------------------------------"
 echo 
 
