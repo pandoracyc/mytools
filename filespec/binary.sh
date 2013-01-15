@@ -11,37 +11,37 @@
 #=========================================================================
 # MAIN
 #=========================================================================
-echo read file : test.dat
-xxd test.dat
+echo read file : sample.dat
+xxd sample.dat
 echo 
 
 echo run read.rb
-./read.rb >test.log
+./read.rb >sample.log
 echo result is $?
 echo
 
-echo test_head.csv
+echo sample_head.csv
 echo "---------------------------------------------------"
-cat test_head.csv
+cat sample_head.csv
 echo "---------------------------------------------------"
 echo 
 
-echo test_body.csv
+echo sample_body.csv
 echo "---------------------------------------------------"
-cat test_body.csv
+cat sample_body.csv
 echo "---------------------------------------------------"
 echo 
 
 echo run write.rb
-./write.rb >test.log
+./write.rb >>sample.log
 echo result is $?
 echo
 
-echo read file : test_out.dat
-xxd test_out.dat
+echo read file : sample_out.dat
+xxd sample_out.dat
 echo 
 
-diff -s test.dat test_out.dat
+diff -s sample.dat sample_out.dat
 
 #=========================================================================
 # FINALIZE

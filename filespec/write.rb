@@ -3,8 +3,8 @@
 require "csv"
 
 #FILE INFOMATION
-outfile = "test_out.dat"
-csvfile = "test_%s.csv"
+outfile = "sample_out.dat"
+csvfile = "sample_%s.csv"
 
 # open file
 head_filename = sprintf(csvfile,"head")

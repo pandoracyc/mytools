@@ -14,10 +14,12 @@ def read_config_file(file_prefix, extension )
 	print "----------------------------------------\n"
 	unit = Array.new
 	keys = Array.new
+	size = Array.new
 	pack_template = Array.new
 	i = 0
 	while section = config_fp.readline
-		unit[i] = section.join
+		unit[i] = section[0]
+		size[i] = section[1].to_i
 		keys[i] = config_fp.readline
 		pack_template[i] = config_fp.readline
 	#	alist = pack_template[i].zip(keys[i])
@@ -26,8 +28,10 @@ def read_config_file(file_prefix, extension )
 		# print section
 		print "unit : "
 		p unit[i]
+		print "size : "
+		p size[i]
 		print "keys : "
-		p keys[i].join
+		p keys[i]
 		print "pack_template : "
 		p pack_template[i]
 		print "\n"
@@ -44,6 +48,9 @@ def read_config_file(file_prefix, extension )
 	$file_pack_template = Hash[alist]
 	#p file_pack_template["head"]
 	#p file_pack_template["body"]
+
+	alist = unit.zip(size)
+	$file_length = Hash[alist]
 
 	# close file
 	config_fp.close

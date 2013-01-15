@@ -3,18 +3,23 @@
 require "csv"
 require "read_config"
 
+# TODO READ FROM ENVIRONMENT
+prefix = "sample"
+extension = "dat"
+
+
 #FILE INFOMATION
-read_config_file("sample","dat")
-filename = "sample.dat"
-csvfile = "sample_%s.csv"
+read_config_file(prefix, extension)
+filename = sprintf("%s.%s", prefix, extension)
+csvfile = sprintf("%s.csv", prefix)
 
 unit = "head"
-head_length = 5
+head_length = $file_length[unit]
 head_keys=$file_keys[unit]
 head_pack = $file_pack_template[unit].join
 
 unit = "body"
-body_record_size = 4
+body_record_size = $file_length[unit]
 body_keys=$file_keys[unit]
 body_pack = $file_pack_template[unit].join
 
