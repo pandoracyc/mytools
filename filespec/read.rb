@@ -8,11 +8,11 @@ csvfile = "test_%s.csv"
 
 head_length = 5
 head_keys=["len","to","record_size"]
-head_pack = "nH2n"
+head_pack = "H4H2H4"
 
 body_record_size = 4
 body_keys=["number","x","y"]
-body_pack = "nH2H2"
+body_pack = "H4H2H2"
 
 
 # open file
