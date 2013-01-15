@@ -26,6 +26,7 @@ print "----------------------------------------\n"
 print "read head\n"
 print "----------------------------------------\n"
 head_keys = out_head.readline
+p head_pack = out_head.readline.join
 head_values = out_head.readline
 alist = head_keys.zip(head_values)
 p head_hash = Hash[alist]
@@ -36,6 +37,7 @@ print "----------------------------------------\n"
 print "read body\n"
 print "----------------------------------------\n"
 body_keys = out_body.readline
+p body_pack = out_body.readline.join
 body_hash = Array.new
 while body_values = out_body.readline
 	alist = body_keys.zip(body_values)
