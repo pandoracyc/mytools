@@ -48,7 +48,6 @@ do
 	echo $line|sed 's%,%</td>\n<td>%g' >>$OUTPUT_HTML
 	echo -e '</td>\n</tr>' >>$OUTPUT_HTML
 	echo >>$OUTPUT_HTML
-	echo >>$OUTPUT_HTML
 done <$HEAD_CSV
 echo 
 cat >> $OUTPUT_HTML <<EOF
@@ -71,7 +70,6 @@ do
 	echo -en '<tr>\n<td>' >>$OUTPUT_HTML
 	echo $line|sed 's%,%</td>\n<td>%g' >>$OUTPUT_HTML
 	echo -e '</td>\n</tr>' >>$OUTPUT_HTML
-	echo >>$OUTPUT_HTML
 	echo >>$OUTPUT_HTML
 done <$BODY_CSV
 cat >> $OUTPUT_HTML <<EOF
