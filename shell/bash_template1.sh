@@ -34,8 +34,12 @@ esac
 #=========================================================================
 # INITIALIZE
 #=========================================================================
-#. template.conf
+# Read conf file
+if [ -f template.conf ];then
+	. template.conf
+fi
 #. common_func.sh
+
 #TEMP_DIR="/tmp/"
 echo TEST>tmp.txt
 if [ $? != 0 ];then
